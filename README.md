@@ -2,7 +2,7 @@
 Some sugar that sit on top of prebid.js and DFP to manage responsive ad units and integrating bidders.
 
 
-# Example
+# example
 ```javascript
 //measure viewport + assign default min width && height
 publife.defineViewport(320, 480);
