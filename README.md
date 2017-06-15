@@ -15,11 +15,11 @@ publife.defineViewport(320, 480);
 //true will consider width and height
 //.force([w,h]) will force support for the size
 */
-publife.addSizeMapping('box_dsktp', [[300,250], [300,600]], false).noMobile(450);
+publife.addSizeMapping('box_dsktp', [[300,250], [300,600]], false).noMobile();
 publife.addSizeMapping('box_mbl', [[300,250], [300, 50], [300, 100]]).noDesktop();
 publife.addSizeMapping('aol_desktop_0', [[300,250]], true).noMobile();
 publife.addSizeMapping('aol_desktop_1', [[300,600]], false).noMobile();
-publife.addSizeMapping('aol_mobile_0', [[300,600]]).noDesktop().force([1,1]);
+publife.addSizeMapping('aol_mobile_0', [[300,250]]).noDesktop()
 
 //define slots very similar to DFP
 publife.defineSlot('/17107625/test/desktop', 'box_dsktp', 'div-gpt-ad-1496254582314-0');
