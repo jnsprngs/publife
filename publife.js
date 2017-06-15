@@ -1,3 +1,5 @@
+/* this is an example of everything -- from setup to calling prebid and dfp */
+/* obvi you would load async load prebid and dfp before this snipped */
 /* setup namespaces */
 var pbjs = pbjs || {};
 pbjs.que = pbjs.que || [];
