@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=3">
+<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="https://cdn-static-1.medium.com/_/fp/css/fonts-hinted-base.nXqTvl3tOo9dXbn4BRwJAg.css" />
+<link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
+<!-- tp js library -->
+<script type="text/javascript" src="https://s3.amazonaws.com/thinkprogress.org/js/jLibrary.js"></script>
+<style type="text/css">
+html, body {
+  width:100%;
+  padding: 0;
+  margin: 0;
+}
+body {
+	margin: 0 auto;
+	font-size: 16px;
+	line-height: 1.5;
+	background: #fff;
+	color: rgba(0,0,0,.75);
+	font-family: 'Roboto', sans-serif;
+}
+img {
+	width: 100%;
+}
+section, article, aside, footer, header, nav, figure {
+  display:block;
+  margin: 0;
+  padding: 0;
+}
+nav, aside, footer, .module {
+    margin: 1rem;
+	padding: .5rem;
+	box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    border: 1px solid rgba(0,0,0,.125);
+    background: #fff;
+	box-sizing: border-box;
+	/* min height not necessary */
+	min-height: 50px;
+}
+nav, footer {
+    position: relative;
+	margin: 0;
+	color: #fff;
+	background-color: #531AAD;
+}
+nav {
+	border-style: none none solid none;
+}
+#nav-logo {
+	max-width: 300px;
+}
+main {
+	min-height: 900px;
+	margin: 0 auto;
+}
+footer {
+	border-style: solid none none none;
+}
+
+/* manage colors of things */
+.color-purple {
+	color: #fff;
+	background: #531AAD;
+}
+.color-green {
+	color: #fff;
+	background: #009933;
+}
+/* end manage colors of things */
+
+article section, .end-article {
+	width: 100%;
+	max-width: 550px;
+	margin: 15px auto 30px 25%;
+	box-sizing: border-box;
+}
+article section.full-bleed {
+	width: 100%;
+	max-width: initial;
+	margin: 0;
+	padding: 0;
+}
+article section img {
+	width: 100%;
+}
+h1 {
+	font-weight: 800;
+	font-size: 36px;
+	line-height: 1.2;
+	margin: 0;
+	padding: 12px 0 0 0;
+}
+address, time {
+	display: inline-block;
+	font-size: 14px;
+	margin: 0;
+	padding: 6px 0;
+}
+time {
+	padding: 0 0 0 6px;
+}
+.pre-article {
+	width: 1200px;
+	min-height: 100px;
+	margin: 30px auto 15px auto;
+}
+.end-article {
+	width: 550px;
+	height: 400px;
+	margin: 30px auto 15px 25%;
+}
+.recirc {
+	color: #fff;
+	background-color: #d3d3d3;
+}
+
+aside {
+	float: right;
+}
+.aside {
+	position:relative;
+}
+.inside {
+	position:absolute;
+	left: 650px;
+}
+/* flex box stuff */
+.flex-box {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center; /* flex-start */
+	align-items:flex-start; /*flex-start */
+}
+.flex-item {
+	/*
+	order : 
+	flex-grow: 
+	*/
+	align-items: flex-start; /* center */
+	box-sizing: border-box;
+	flex-basis: 1;
+}
+.email-cta.wrapper {
+	padding: 0 0 0 15px;
+	font-weight: bold;
+	font-size: .8rem;
+}
+.ad-placement {
+	width: initial;
+	min-width: 300px;
+}
+.ad-placement.rail {
+	float: right;
+	margin: 20px 100px 20px 20px;
+}
+
+@media only screen and (max-width: 900px) {
+	article section, .end-article { 
+		margin: 0 auto;
+		padding: 0 15px;
+	}
+	.ad-placement.rail {
+		margin: 20px auto;
+		width: 100%;
+	}
+}
+@media only screen and (max-width: 330px) {
+	article section, .end-article { 
+		padding: 0 8px;
+	}
+}
+</style>
+<!-- load prebid.js -->
+<script type="text/javascript" async="async" src="https://acdn.adnxs.com/prebid/not-for-prod/prebid.js"></script>
+<!-- load GPT -->
+<script type="text/javascript" async="async" src='https://www.googletagservices.com/tag/js/gpt.js'></script>
+<script type="text/javascript">
+/* setup namespaces */
+var pbjs = pbjs || {};
+pbjs.que = pbjs.que || [];
+
+var googletag = googletag || {};
+googletag.cmd = googletag.cmd || [];
+
+var publife = publife || {};
+publife.prebid = publife.prebid || {};
+
+publife.addSizeMapping = function(name, sizes, hFlag) {
+	var map = [];
+	if(hFlag === undefined) {hFlag = false;}
+	map.force = function(a){
+		var flag = false;
+		var len = this.length;
+		for(var i = 0; i < len; i++) {
+			if(this[i][0] === a[0] && this[o][0] === a[1]) {
+				flag = true;
+				break;
+			}
+		}
+		if(!flag) {
+			this.push(a);
+		}
+		return this;
+	}
+	map.noMobile = function(w) {
+		if(publife.viewport.width <= (isNaN(w) ? 800 : w)) {
+			this.length = 0;
+		}
+		return this;
+	}
+	map.noDesktop = function(w) {
+		if(publife.viewport.width > (isNaN(w) ? 800 : w)) {
+			this.length = 0;
+		}
+		return this;
+	}
+	if(this.sizeMapping === undefined) {
+		this.sizeMapping = {};
+	}
+	var w = publife.viewport.width;
+	var h = publife.viewport.height;
+	var len = sizes.length;
+	for(var i = 0; i < len; i++) {
+		if(sizes[i][0] <= w) {
+			if(sizes[i][1] <= h || hFlag === false) {
+				map.push(sizes[i]);
+			}
+		}
+	}
+	return this.sizeMapping[name] = map;
+};
+
+publife.defineViewport = function(w, h) {
+	this.viewport = {
+		width : Math.max(document.documentElement.clientWidth, window.innerWidth || w),		//could use some cross-browser support
+		height: Math.max(document.documentElement.clientHeight, window.innerHeight || h)
+	}
+};
+
+publife.defineSlot = function(name, sizeMapping, domWrapperId) {
+	if(this.slots === undefined) {
+		this.slots = [];
+	}
+	this.slots.push(
+		{
+			name : name,
+			domWrapperId : domWrapperId,
+			sizeMapping : publife.sizeMapping[sizeMapping] || []
+		}
+	);
+};
+
+publife.defineBidder = function(name, params) {
+	if(this.bidder === undefined) {
+			this.bidder = {};
+	}
+	return this.bidder[name] = {
+		name : name,
+		params : params,																	//generic params applied to every ad unit
+		bids : [],
+		addBid : function(name, sizes, params) {
+			this.bids.push(
+				{
+					name : name,
+					sizes : publife.sizeMapping[sizes] || [],								//all the sizes the bidder is interested in
+					params : params			
+				}
+			);
+			return this;
+		}
+	};
+};
+
+publife.prebid.attachBidderToAdUnit = function(name) {
+	var arr = [];
+	var keys = Object.keys(publife.bidder);
+	var len = keys.length;
+	for(var i = 0; i < len; i++) {															//only attach bidder to adUnit if adUnit exists
+		var bidder = publife.bidder[keys[i]];
+		var ben = bidder.bids.length;
+		for(var k = 0; k < ben; k++) {
+			var bid = bidder.bids[k];
+			if(bid.name === name) {
+				arr.push({
+					bidder : bidder.name,
+					params : Object.assign({}, bidder.params, bid.params),
+				});
+			}/*  else {
+				console.log('You can\'t bid on', bid.name, 'b/c the dfp ad slot was not defined. FAKE IMPRESSIONS! SADDD! ');
+			} */
+		}
+	}
+	return arr;
+};
+
+publife.prebid.addAdUnit = function(adUnit) {
+	if(this.adUnits === undefined) {
+		this.adUnits = [];
+	}
+	if(adUnit.sizeMapping.length) {															//drop pre-bid requests if adUnit has empty sizeMapping
+		this.adUnits.push(
+			{
+				code : adUnit.domWrapperId,
+				sizes: adUnit.sizeMapping.slice(),
+				bids : this.attachBidderToAdUnit(adUnit.name)
+			}
+		);
+	}
+};
+
+publife.init = function(timeout, granularity) {
+    googletag.cmd.push(function() {
+        googletag.pubads().disableInitialLoad();
+    });
+	pbjs.que.push(																			//set price granularities
+		(function(granularity) {
+			return function() {
+				pbjs.setPriceGranularity(granularity)
+			}
+		})(granularity === undefined ? 'low' : granularity)
+	);
+	function sendAdserverRequest() {														//send the prebid info to DFP when executed on callback or timeout
+		if(!pbjs.adserverRequestSent) {
+			googletag.cmd.push(function() {
+				pbjs.que.push(function() {
+					pbjs.setTargetingForGPTAsync();
+					googletag.pubads().refresh();
+				});
+			});
+			pbjs.adserverRequestSent = true;
+		}
+	}
+	var len = this.slots.length;
+	for(var i = 0; i < len; i++) {
+		var slot = this.slots[i];
+		this.prebid.addAdUnit(slot);														//create prebid ad units
+		
+		if(slot.sizeMapping.length) {														//googletag.defineSlot()
+			googletag.cmd.push(
+				(function(slot) {
+					return function() {
+						googletag.defineSlot(slot.name, slot.sizeMapping.slice(), slot.domWrapperId).addService(googletag.pubads());
+						googletag.pubads().enableSingleRequest();
+						googletag.enableServices();
+					};
+				})(slot)
+			);
+		}
+
+	}
+	pbjs.que.push(																			//send prebid requests 
+		(function(adUnits, sendAdserverRequest) {
+			return function() {
+				pbjs.addAdUnits(adUnits);
+				pbjs.requestBids({
+					bidsBackHandler: sendAdserverRequest
+				});
+			}
+		})(this.prebid.adUnits, sendAdserverRequest)
+	);
+    setTimeout(sendAdserverRequest, (isNaN(timeout) ? 700 : timeout));						//default to 700 mins if not set
+};
+
+
+
+
+/* START publife */
+publife.defineViewport(320, 480);															//measure viewport + assign default min width && height
+
+publife.addSizeMapping('box_dsktp', [[300,250], [300,600]], false).noMobile(450);			//noMobile() to hide on mobile
+publife.addSizeMapping('box_mbl', [[300,250], [300, 50], [300, 100]], false).noDesktop();	//noDesktop() to hide on desktop
+publife.addSizeMapping('aol_desktop_0', [[300,250]], false).noMobile();						//false (opitonal) only considers width to fitting
+publife.addSizeMapping('aol_desktop_1', [[300,600]], false).noMobile();						//true will consider width and height
+publife.addSizeMapping('aol_mobile_0', [[300,600]]).noDesktop().force([1,1]);				//.force([w,h]) will force support for the size
+
+publife.defineSlot('/17107625/test/desktop', 'box_dsktp', 'div-gpt-ad-1496254582314-0');	//dfp ad unit name, id for ad div, sizeMapping this ad unit will use
+publife.defineSlot('/17107625/test/mobile_box_0', 'box_mbl', 'div-gpt-ad-1497469095955-0');
+
+publife.defineBidder('aol', {network: '10041.1'})										//bidder name + params that are included in every bids obj
+	.addBid('/17107625/test/desktop', 'aol_desktop_0', {placement: '4582695'})			//name of DFP adunit bidding on, sizeMapping, and specific params
+	.addBid('/17107625/test/desktop', 'aol_desktop_1', {placement: '4582694'})			//if bidder requires 2 requets for 2 ad sizes within an ad unit, call .addBid() again.
+	.addBid('/17107625/test/mobile_box_0', 'aol_mobile_0', {placement: '4582697'});		//bid on different ad unit
+
+publife.defineBidder('publife', {networkId : 'aw8aslk3', catParam : 'lebron james'})	//fake bidder
+	.addBid('/17107625/test/desktop', 'box_dsktp', {placementId : 'avnlpidrq128f', })	//pass it a size map with multiple sizes instead of diffrent calls for each size
+	.addBid('/17107625/test/mobile_box_0', 'box_mbl', {placementId : 'rj3ldk50fjs', passRndmValToBidder : true});
+
+
+publife.init(1500, 'low');																//kick things off, define timeout and granularity
+
+/* END publife */
+</script>
+</head>
+<body>
+	<nav>
+		<div class="nav-content">{Publisher Name}</div>
+	</nav>
+	<main>
+		<article>
+			<section>
+				<header>
+					<h1>Phasellus quam dui enim turpis nec cras, condimentum vestibulum a pede in sit pede</h1>
+					<address class="author">By: John Hancock</address>
+					<time pubdate datetime="1970-01-01" class="time">Jan 1, 1970 9:37AM</time>
+				</header>
+			</section>
+			<section class="full-bleed-">
+				<figure><img src="https://cdn-images-1.medium.com/max/2000/1*ce8sudtav3XnkSbrBCcWvw.png" /></figure>
+			</section>
+			<section>
+				<p>Lorem ipsum dolor sit amet, suscipit dis sem libero, scelerisque volutpat pellentesque, aenean amet pellentesque quis dis massa risus, et ligula pulvinar tortor augue diam proin. Litora morbi quis orci at, porttitor sem lobortis viverra, feugiat accumsan laoreet id eget dolor malesuada, wisi orci fringilla urna et lacus, autem venenatis mauris justo.</p>
+				
+			</section>
+			<!-- DESKTOP AD UNIT -->
+			<section class="ad-placement rail flex-box">
+				<!-- /17107625/test/desktop -->
+				<div id="div-gpt-ad-1496254582314-0" class="flex-item"></div>
+			</section>
+			<section>
+				<p>Donec placerat, vestibulum in natoque eu a, egestas suspendisse lacus, lacinia sodales arcu sed bibendum, enim quis mollis duis magna. Magna nunc vestibulum sapien dui. Erat faucibus nec, lacus lectus, potenti justo suspendisse sed vestibulum eros, mus auctor porttitor nullam, duis aptent. Libero purus tempor porta, scelerisque pharetra nec vestibulum ante sed.</p>
+			</section>
+			<!-- MOBILE AD UNIT -->
+			<section class="ad-placement inline flex-box">
+				<!-- /17107625/test/mobile_box_0 -->
+				<div id='div-gpt-ad-1497469095955-0' class="flex-item"></div>
+			</section>
+			<section>
+				<p>Donec turpis magna ac, eget porttitor. Tellus mus nascetur orci. Vestibulum lacinia tristique suscipit, odio vestibulum, nulla tellus. Nec vel nec condimentum, senectus sed condimentum nulla. Sodales convallis duis sed, pede elementum dis cras blandit, vehicula magnis luctus, nec eros. Sit luctus diam, porttitor tempus fringilla cras sed vestibulum venenatis.</p>
+				<p>In quam nulla cras adipiscing duis, mauris orci, augue justo donec massa lorem. Pede quisque, sapien irure lorem integer, commodo odio mattis ligula vivamus pede diam. Ut proin massa, hac quis quis mattis nam, massa cras a ut euismod, quis vel lectus sodales orci ultricies, integer pede cras lorem mi nibh.</p>
+				<p>Lectus urna justo sem, fusce primis convallis augue porttitor praesent tellus, dolor vel lacinia lectus, nulla arcu laoreet ipsum eros luctus magna, at cras duis aliquam quisque feugiat aliquam. Fringilla mattis, hendrerit gravida suspendisse elementum torquent ipsum, quis veritatis eget. Vestibulum class convallis vel fusce, id cras proin. Tellus pede potenti metus.</p>
+			</section>
+			<section>
+				<figure>
+					<img src="https://cdn-images-1.medium.com/max/800/1*D74MowVKipNCMNF4NTnn2Q.jpeg" />
+					<figcaption>Lorem ipsum volder.</figcaption>
+				</figure>
+			</section>
+			<section>
+				<p>Fusce est eleifend dui vestibulum non praesent, condimentum ornare erat vestibulum eget nibh sapien, magna magna aenean sem sed placerat. Neque facilisi mattis. Id amet mi porta dignissim porta mauris, lacus sagittis bibendum mi nisl, auctor orci arcu dignissim lorem aliquam turpis, quam dapibus, sollicitudin quam est. Elementum erat faucibus amet vestibulum sollicitudin curabitur, leo dui fames proin nulla donec, consectetuer scelerisque nec tristique, a urna facilisi interdum turpis, esse eget arcu.</p>
+				<p>Nec purus magna nonummy lectus ornare conubia, tristique mauris at metus, quisque habitasse. Lorem ipsum dolor sit amet, eget libero proin. Velit amet lectus, etiam ipsum morbi, integer et. Lacus erat viverra, magna exercitationem. Enim faucibus phasellus. Eos sed, aliquam ut neque. Pede eget.</p>
+				<p>Vehicula conubia, egestas duis, ipsum ac. Volutpat cras. Id aliquet dictum, ut et. Pede odio. Quis aliquet mollis. Per blandit.</p>
+				<p>Semper velit integer, eu montes, lacus hendrerit. Pede suspendisse neque. Vel gravida fermentum, montes eros arcu. Hac congue turpis, pede arcu, ante ac. Est pede. Dolor proin dictum, nulla proin.</p>
+				<p>Maecenas dolor. Eros vestibulum accumsan, nisl gravida lobortis. Est dolor ipsum, pede in quis, ullamcorper pede proin. Cum in eget, fermentum nulla, quis eu porttitor. Tempor cras.</p>
+			</section>
+		</article>
+		<section class="end-article recirc">
+			<div>{End-article recirc}</div>
+		</section>
+	</main>
+	<footer>
+	{El Footer}
+	</footer>
+	<script>
+	(function(p, len){
+		p = publife.slots, len = p.length;
+		for(var i = 0; i < len; i++) {
+			//googletag.display();
+			if(p[i].sizeMapping.length) {
+				googletag.cmd.push(
+					(function(domWrapperId) {
+						return function() {
+							googletag.cmd.push(function() { googletag.display(domWrapperId); });
+						};
+					})(p[i].domWrapperId)
+				);
+			}
+
+		}
+	})()
+	</script>
+</body>
+</html>
