@@ -79,13 +79,11 @@ publife.defineSlot = function(name, sizeMapping, domWrapperId) {
 	if(this.slots === undefined) {
 		this.slots = [];
 	}
-	this.slots.push(
-		{
-			name : name,
-			domWrapperId : domWrapperId,
-			sizeMapping : publife.sizeMapping[sizeMapping] || []
-		}
-	);
+	this.slots.push({
+		name : name,
+		domWrapperId : domWrapperId,
+		sizeMapping : publife.sizeMapping[sizeMapping] || []
+	});
 };
 
 publife.defineBidder = function(name, params) {
@@ -97,13 +95,11 @@ publife.defineBidder = function(name, params) {
 		params : params,																	//generic params applied to every ad unit
 		bids : [],
 		addBid : function(name, sizes, params) {
-			this.bids.push(
-				{
-					name : name,
-					sizes : publife.sizeMapping[sizes] || [],								//all the sizes the bidder is interested in
-					params : params			
-				}
-			);
+			this.bids.push({
+				name : name,
+				sizes : publife.sizeMapping[sizes] || [],								//all the sizes the bidder is interested in
+				params : params			
+			});
 			return this;
 		}
 	};
@@ -136,13 +132,11 @@ publife.prebid.addAdUnit = function(adUnit) {
 		this.adUnits = [];
 	}
 	if(adUnit.sizeMapping.length) {															//drop pre-bid requests if adUnit has empty sizeMapping
-		this.adUnits.push(
-			{
-				code : adUnit.domWrapperId,
-				sizes: adUnit.sizeMapping.slice(),
-				bids : this.attachBidderToAdUnit(adUnit.name)
-			}
-		);
+		this.adUnits.push({
+			code : adUnit.domWrapperId,
+			sizes: adUnit.sizeMapping.slice(),
+			bids : this.attachBidderToAdUnit(adUnit.name)
+		});
 	}
 };
 
