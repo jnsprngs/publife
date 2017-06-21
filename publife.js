@@ -1,5 +1,8 @@
-/* this is an example of everything -- from setup to calling prebid and dfp */
 /* obvi you would load async load prebid and dfp before this snipped */
+/* setup namespaces */
+var start = performance.now();
+console.log(start);
+
 /* setup namespaces */
 var pbjs = pbjs || {};
 pbjs.que = pbjs.que || [];
@@ -11,46 +14,68 @@ var publife = publife || {};
 publife.prebid = publife.prebid || {};
 
 publife.addSizeMapping = function(name, sizes, hFlag) {
-	var map = [];
-	if(hFlag === undefined) {hFlag = false;}
-	map.force = function(a){
-		var flag = false;
-		var len = this.length;
-		for(var i = 0; i < len; i++) {
-			if(this[i][0] === a[0] && this[o][0] === a[1]) {
-				flag = true;
-				break;
-			}
-		}
-		if(!flag) {
-			this.push(a);
-		}
-		return this;
-	}
-	map.noMobile = function(w) {
-		if(publife.viewport.width <= (isNaN(w) ? 800 : w)) {
-			this.length = 0;
-		}
-		return this;
-	}
-	map.noDesktop = function(w) {
-		if(publife.viewport.width > (isNaN(w) ? 800 : w)) {
-			this.length = 0;
-		}
-		return this;
-	}
-	if(this.sizeMapping === undefined) {
-		this.sizeMapping = {};
-	}
-	var w = publife.viewport.width;
-	var h = publife.viewport.height;
-	var len = sizes.length;
+	var map = [], 
+	w = publife.viewport.width, 
+	h = publife.viewport.height,
+	len = sizes.length;
 	for(var i = 0; i < len; i++) {
 		if(sizes[i][0] <= w) {
-			if(sizes[i][1] <= h || hFlag === false) {
+			if(sizes[i][1] <= h || hFlag !== true) {
 				map.push(sizes[i]);
 			}
+		} else {
+			break;
 		}
+	}
+	/*
+	//unnecessary
+	map.remove = function(a) {
+		var len = this.length;
+		if(len) {
+			for(var i = 0; i < len; i++) {
+				if(this[i][0] === a[0] && this[i][0] === a[1]) {
+					this.splice(i, 1);
+					break;
+				}
+			}
+		}
+		return this;
+	};
+	*/
+	map.force = function(a){
+		var len = this.length;
+		if(len) {
+			var flag = false;
+			for(var i = 0; i < len; i++) {
+				if(this[i][0] === a[0] && this[i][1] === a[1]) {
+					flag = true;
+					break;
+				}
+			}
+			if(!flag) {
+				this.push(a);
+			}
+		}
+		return this;
+	};
+	map.noMobile = function(w) {
+		if(this.length) {
+			if(publife.viewport.width <= (isNaN(w) ? 800 : w)) {
+				this.length = 0;
+			}
+		}
+		return this;
+	};
+	map.noDesktop = function(w) {
+		if(this.length) {
+			if(publife.viewport.width > (isNaN(w) ? 800 : w)) {
+				this.length = 0;
+			}
+		}
+		return this;
+	};
+	if(this.sizeMapping === undefined) {
+		this.sizeMapping = {};
 	}
 	return this.sizeMapping[name] = map;
 };
