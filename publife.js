@@ -1,8 +1,4 @@
-/* obvi you would load async load prebid and dfp before this snipped */
-/* setup namespaces */
-var start = performance.now();
-console.log(start);
-
+/* obvi you would async load prebid and dfp before this snipped */
 /* setup namespaces */
 var pbjs = pbjs || {};
 pbjs.que = pbjs.que || [];
@@ -11,14 +7,10 @@ var googletag = googletag || {};
 googletag.cmd = googletag.cmd || [];
 
 var publife = publife || {};
-publife.prebid = publife.prebid || {};
 
 publife.addSizeMapping = function(name, sizes, hFlag) {
-	var map = [], 
-	w = publife.viewport.width, 
-	h = publife.viewport.height,
-	len = sizes.length;
-	for(var i = 0; i < len; i++) {
+	var map = [], w = publife.viewport.width, h = publife.viewport.height;
+	for(var i = 0, len = sizes.length; i < len; i++) {
 		if(sizes[i][0] <= w) {
 			if(sizes[i][1] <= h || hFlag !== true) {
 				map.push(sizes[i]);
@@ -27,80 +19,71 @@ publife.addSizeMapping = function(name, sizes, hFlag) {
 			break;
 		}
 	}
-	/*
-	//unnecessary
-	map.remove = function(a) {
-		var len = this.length;
-		if(len) {
-			for(var i = 0; i < len; i++) {
-				if(this[i][0] === a[0] && this[i][0] === a[1]) {
-					this.splice(i, 1);
-					break;
+	if(map.length) {
+		map.force = function(a){
+			if(this.length) {
+				var flag = false;
+				for(var i = 0, len = this.length; i < len; i++) {
+					if(this[i][0] === a[0] && this[i][1] === a[1]) {
+						flag = true;
+						break;
+					}
+				}
+				if(!flag) {
+					this.push(a);
 				}
 			}
-		}
-		return this;
-	};
-	*/
-	map.force = function(a){
-		var len = this.length;
-		if(len) {
-			var flag = false;
-			for(var i = 0; i < len; i++) {
-				if(this[i][0] === a[0] && this[i][1] === a[1]) {
-					flag = true;
-					break;
+			return this;
+		};
+		map.noMobile = function(w) {
+			if(this.length) {
+				if(publife.viewport.width <= (isNaN(w) ? 800 : w)) {
+					this.length = 0;
 				}
 			}
-			if(!flag) {
-				this.push(a);
+			return this;
+		};
+		map.noDesktop = function(w) {
+			if(this.length) {
+				if(publife.viewport.width > (isNaN(w) ? 800 : w)) {
+					this.length = 0;
+				}
 			}
-		}
-		return this;
-	};
-	map.noMobile = function(w) {
-		if(this.length) {
-			if(publife.viewport.width <= (isNaN(w) ? 800 : w)) {
-				this.length = 0;
-			}
-		}
-		return this;
-	};
-	map.noDesktop = function(w) {
-		if(this.length) {
-			if(publife.viewport.width > (isNaN(w) ? 800 : w)) {
-				this.length = 0;
-			}
-		}
-		return this;
-	};
+			return this;
+		};
+	} else {
+		map.force = function(a){return this};
+		map.noMobile = function(w){return this};
+		map.noDesktop = function(w){return this};
+	}
 	if(this.sizeMapping === undefined) {
 		this.sizeMapping = {};
 	}
 	return this.sizeMapping[name] = map;
 };
 
+
 publife.defineViewport = function(w, h) {
 	this.viewport = {
-		width : Math.max(document.documentElement.clientWidth, window.innerWidth || w),		//could use some cross-browser support
-		height: Math.max(document.documentElement.clientHeight, window.innerHeight || h)
+		width : Math.max(document.documentElement.clientWidth, window.innerWidth, w, 0),		//could use some cross-browser support
+		height: Math.max(document.documentElement.clientHeight, window.innerHeight, h, 0)
 	}
 };
 
-publife.defineSlot = function(name, sizeMapping, domWrapperId) {
+publife.defineSlot = function(name, map, domWrapperId) {
 	if(this.slots === undefined) {
 		this.slots = [];
 	}
 	this.slots.push({
 		name : name,
 		domWrapperId : domWrapperId,
-		sizeMapping : publife.sizeMapping[sizeMapping] || []
+		sizeMapping : this.sizeMapping[map] || []
 	});
 };
 
 publife.defineBidder = function(name, params) {
 	if(this.bidder === undefined) {
-			this.bidder = {};
+		this.bidder = {};
 	}
 	return this.bidder[name] = {
 		name : name,
@@ -117,14 +100,11 @@ publife.defineBidder = function(name, params) {
 	};
 };
 
-publife.prebid.attachBidderToAdUnit = function(name) {
-	var arr = [];
-	var keys = Object.keys(publife.bidder);
-	var len = keys.length;
-	for(var i = 0; i < len; i++) {															//only attach bidder to adUnit if adUnit exists
-		var bidder = publife.bidder[keys[i]];
-		var ben = bidder.bids.length;
-		for(var k = 0; k < ben; k++) {
+publife.attachBidderToPrebidAdUnit = function(name) {
+	var arr = [], keys = Object.keys(this.bidder);
+	for (var i = 0, len = keys.length; i < len; i++) {											//only attach bidder to adUnit if adUnit exists
+		var bidder = this.bidder[keys[i]];
+		for(var k = 0, blen = bidder.bids.length; k < blen; k++) {
 			var bid = bidder.bids[k];
 			if(bid.name === name) {
 				arr.push({
@@ -139,7 +119,7 @@ publife.prebid.attachBidderToAdUnit = function(name) {
 	return arr;
 };
 
-publife.prebid.addAdUnit = function(adUnit) {
+publife.addPrebidAdUnit = function(adUnit) {
 	if(this.adUnits === undefined) {
 		this.adUnits = [];
 	}
@@ -147,7 +127,7 @@ publife.prebid.addAdUnit = function(adUnit) {
 		this.adUnits.push({
 			code : adUnit.domWrapperId,
 			sizes: adUnit.sizeMapping.slice(),
-			bids : this.attachBidderToAdUnit(adUnit.name)
+			bids : this.attachBidderToPrebidAdUnit(adUnit.name)
 		});
 	}
 };
@@ -174,10 +154,9 @@ publife.init = function(timeout, granularity) {
 			pbjs.adserverRequestSent = true;
 		}
 	}
-	var len = this.slots.length;
-	for(var i = 0; i < len; i++) {
+	for(var i = 0, len = this.slots.length; i < len; i++) {
 		var slot = this.slots[i];
-		this.prebid.addAdUnit(slot);														//create prebid ad units
+		this.addPrebidAdUnit(slot);														//create prebid ad units
 		
 		if(slot.sizeMapping.length) {														//googletag.defineSlot()
 			googletag.cmd.push(
@@ -200,7 +179,7 @@ publife.init = function(timeout, granularity) {
 					bidsBackHandler: sendAdserverRequest
 				});
 			}
-		})(this.prebid.adUnits, sendAdserverRequest)
+		})(this.adUnits, sendAdserverRequest)
 	);
     setTimeout(sendAdserverRequest, (isNaN(timeout) ? 700 : timeout));						//default to 700 mins if not set
 };
