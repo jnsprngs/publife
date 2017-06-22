@@ -8,7 +8,6 @@
 <style type="text/css">
 .aside,footer,nav{position:relative}body,html{width:100%;padding:0;margin:0}body{margin:0 auto;font-size:16px;line-height:1.5;background:#fff;color:rgba(0,0,0,.75);font-family:Roboto,sans-serif}img{width:100%}article,aside,figure,footer,header,nav,section{display:block;margin:0;padding:0}.module,aside,footer,nav{margin:1rem;padding:.5rem;box-shadow:0 1px 4px rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.125);background:#fff;box-sizing:border-box;min-height:50px}footer,nav{margin:0;color:#fff;background-color:#531AAD}nav{border-style:none none solid}#nav-logo{max-width:300px}main{min-height:900px;margin:0 auto}footer{border-style:solid none none}.color-purple{color:#fff;background:#531AAD}.color-green{color:#fff;background:#093}.end-article,article section{width:100%;max-width:550px;margin:15px auto 30px 25%;box-sizing:border-box}article section.full-bleed{width:100%;max-width:initial;margin:0;padding:0}article section img{width:100%}h1{font-weight:800;font-size:36px;line-height:1.2;margin:0;padding:12px 0 0}address,time{display:inline-block;font-size:14px;margin:0;padding:6px 0}time{padding:0 0 0 6px}.pre-article{width:1200px;min-height:100px;margin:30px auto 15px}.end-article{width:550px;height:400px;margin:30px auto 15px 25%}.recirc{color:#fff;background-color:#d3d3d3}aside{float:right}.inside{position:absolute;left:650px}.flex-box{display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;align-items:flex-start}.flex-item{align-items:flex-start;box-sizing:border-box;flex-basis:1}.email-cta.wrapper{padding:0 0 0 15px;font-weight:700;font-size:.8rem}.ad-placement{width:initial;min-width:300px}.ad-placement.rail{float:right;margin:20px 100px 20px 20px}@media only screen and (max-width:900px){.end-article,article section{margin:0 auto;padding:0 15px}.ad-placement.rail{margin:20px auto;width:100%}}@media only screen and (max-width:330px){.end-article,article section{padding:0 8px}}
 </style>
-<!-- load prebid.js -->
 <script type="text/javascript" async="async" src="https://acdn.adnxs.com/prebid/not-for-prod/prebid.js"></script>
 <!-- load GPT -->
 <script type="text/javascript" async="async" src='https://www.googletagservices.com/tag/js/gpt.js'></script>
@@ -20,75 +19,91 @@ pbjs.que = pbjs.que || [];
 var googletag = googletag || {};
 googletag.cmd = googletag.cmd || [];
 
+/* START publife */
 var publife = publife || {};
-publife.prebid = publife.prebid || {};
+</script>
+
+<script type="text/javascript">
+/* START publife */
+var start = performance.now();
+console.log(start);
 
 publife.addSizeMapping = function(name, sizes, hFlag) {
-	var map = [];
-	if(hFlag === undefined) {hFlag = false;}
-	map.force = function(a){
-		var flag = false;
-		var len = this.length;
-		for(var i = 0; i < len; i++) {
-			if(this[i][0] === a[0] && this[o][0] === a[1]) {
-				flag = true;
-				break;
+	var map = [], w = publife.viewport.width, h = publife.viewport.height;
+	for(var i = 0, len = sizes.length; i < len; i++) {
+		if(sizes[i][0] <= w) {
+			if(sizes[i][1] <= h || hFlag !== true) {
+				map.push(sizes[i]);
 			}
+		} else {
+			break;
 		}
-		if(!flag) {
-			this.push(a);
-		}
-		return this;
 	}
-	map.noMobile = function(w) {
-		if(publife.viewport.width <= (isNaN(w) ? 800 : w)) {
-			this.length = 0;
-		}
-		return this;
-	}
-	map.noDesktop = function(w) {
-		if(publife.viewport.width > (isNaN(w) ? 800 : w)) {
-			this.length = 0;
-		}
-		return this;
+	if(map.length) {
+		map.force = function(a){
+			if(this.length) {
+				var flag = false;
+				for(var i = 0, len = this.length; i < len; i++) {
+					if(this[i][0] === a[0] && this[i][1] === a[1]) {
+						flag = true;
+						break;
+					}
+				}
+				if(!flag) {
+					this.push(a);
+				}
+			}
+			return this;
+		};
+		map.noMobile = function(w) {
+			if(this.length) {
+				if(publife.viewport.width <= (isNaN(w) ? 800 : w)) {
+					this.length = 0;
+				}
+			}
+			return this;
+		};
+		map.noDesktop = function(w) {
+			if(this.length) {
+				if(publife.viewport.width > (isNaN(w) ? 800 : w)) {
+					this.length = 0;
+				}
+			}
+			return this;
+		};
+	} else {
+		map.force = function(a){return this};
+		map.noMobile = function(w){return this};
+		map.noDesktop = function(w){return this};
 	}
 	if(this.sizeMapping === undefined) {
 		this.sizeMapping = {};
 	}
-	var w = publife.viewport.width;
-	var h = publife.viewport.height;
-	var len = sizes.length;
-	for(var i = 0; i < len; i++) {
-		if(sizes[i][0] <= w) {
-			if(sizes[i][1] <= h || hFlag === false) {
-				map.push(sizes[i]);
-			}
-		}
-	}
 	return this.sizeMapping[name] = map;
 };
 
+
 publife.defineViewport = function(w, h) {
 	this.viewport = {
-		width : Math.max(document.documentElement.clientWidth, window.innerWidth || w),		//could use some cross-browser support
-		height: Math.max(document.documentElement.clientHeight, window.innerHeight || h)
+		width : Math.max(document.documentElement.clientWidth, window.innerWidth, w, 0),		//could use some cross-browser support
+		height: Math.max(document.documentElement.clientHeight, window.innerHeight, h, 0)
 	}
 };
 
-publife.defineSlot = function(name, sizeMapping, domWrapperId) {
+publife.defineSlot = function(name, map, domWrapperId) {
 	if(this.slots === undefined) {
 		this.slots = [];
 	}
 	this.slots.push({
 		name : name,
 		domWrapperId : domWrapperId,
-		sizeMapping : publife.sizeMapping[sizeMapping] || []
+		sizeMapping : this.sizeMapping[map] || []
 	});
 };
 
 publife.defineBidder = function(name, params) {
 	if(this.bidder === undefined) {
-			this.bidder = {};
+		this.bidder = {};
 	}
 	return this.bidder[name] = {
 		name : name,
@@ -105,14 +120,11 @@ publife.defineBidder = function(name, params) {
 	};
 };
 
-publife.prebid.attachBidderToAdUnit = function(name) {
-	var arr = [];
-	var keys = Object.keys(publife.bidder);
-	var len = keys.length;
-	for(var i = 0; i < len; i++) {															//only attach bidder to adUnit if adUnit exists
-		var bidder = publife.bidder[keys[i]];
-		var ben = bidder.bids.length;
-		for(var k = 0; k < ben; k++) {
+publife.attachBidderToPrebidAdUnit = function(name) {
+	var arr = [], keys = Object.keys(this.bidder);
+	for (var i = 0, len = keys.length; i < len; i++) {											//only attach bidder to adUnit if adUnit exists
+		var bidder = this.bidder[keys[i]];
+		for(var k = 0, blen = bidder.bids.length; k < blen; k++) {
 			var bid = bidder.bids[k];
 			if(bid.name === name) {
 				arr.push({
@@ -127,7 +139,7 @@ publife.prebid.attachBidderToAdUnit = function(name) {
 	return arr;
 };
 
-publife.prebid.addAdUnit = function(adUnit) {
+publife.addPrebidAdUnit = function(adUnit) {
 	if(this.adUnits === undefined) {
 		this.adUnits = [];
 	}
@@ -135,7 +147,7 @@ publife.prebid.addAdUnit = function(adUnit) {
 		this.adUnits.push({
 			code : adUnit.domWrapperId,
 			sizes: adUnit.sizeMapping.slice(),
-			bids : this.attachBidderToAdUnit(adUnit.name)
+			bids : this.attachBidderToPrebidAdUnit(adUnit.name)
 		});
 	}
 };
@@ -162,10 +174,9 @@ publife.init = function(timeout, granularity) {
 			pbjs.adserverRequestSent = true;
 		}
 	}
-	var len = this.slots.length;
-	for(var i = 0; i < len; i++) {
+	for(var i = 0, len = this.slots.length; i < len; i++) {
 		var slot = this.slots[i];
-		this.prebid.addAdUnit(slot);														//create prebid ad units
+		this.addPrebidAdUnit(slot);														//create prebid ad units
 		
 		if(slot.sizeMapping.length) {														//googletag.defineSlot()
 			googletag.cmd.push(
@@ -188,22 +199,19 @@ publife.init = function(timeout, granularity) {
 					bidsBackHandler: sendAdserverRequest
 				});
 			}
-		})(this.prebid.adUnits, sendAdserverRequest)
+		})(this.adUnits, sendAdserverRequest)
 	);
     setTimeout(sendAdserverRequest, (isNaN(timeout) ? 700 : timeout));						//default to 700 mins if not set
 };
 
-
-
-
 /* START publife */
 publife.defineViewport(320, 480);															//measure viewport + assign default min width && height
 
-publife.addSizeMapping('box_dsktp', [[300,250], [300,600]], false).noMobile(450);			//noMobile() to hide on mobile
-publife.addSizeMapping('box_mbl', [[300,250], [300, 50], [300, 100]], false).noDesktop();	//noDesktop() to hide on desktop
+publife.addSizeMapping('box_dsktp', [[300,250], [300,600]], false).noMobile();			//noMobile() to hide on mobile
+publife.addSizeMapping('box_mbl', [[300, 50], [300, 100], [300,250]], false).noDesktop();	//noDesktop() to hide on desktop
 publife.addSizeMapping('aol_desktop_0', [[300,250]], false).noMobile();						//false (opitonal) only considers width to fitting
 publife.addSizeMapping('aol_desktop_1', [[300,600]], false).noMobile();						//true will consider width and height
-publife.addSizeMapping('aol_mobile_0', [[300,600]]).noDesktop().force([1,1]);				//.force([w,h]) will force support for the size
+publife.addSizeMapping('aol_mobile_0', [[300,250]]).noDesktop();				//.force([w,h]) will force support for the size
 
 publife.defineSlot('/17107625/test/desktop', 'box_dsktp', 'div-gpt-ad-1496254582314-0');	//dfp ad unit name, id for ad div, sizeMapping this ad unit will use
 publife.defineSlot('/17107625/test/mobile_box_0', 'box_mbl', 'div-gpt-ad-1497469095955-0');
@@ -217,10 +225,12 @@ publife.defineBidder('publife', {networkId : 'aw8aslk3', catParam : 'lebron jame
 	.addBid('/17107625/test/desktop', 'box_dsktp', {placementId : 'avnlpidrq128f', })	//pass it a size map with multiple sizes instead of diffrent calls for each size
 	.addBid('/17107625/test/mobile_box_0', 'box_mbl', {placementId : 'rj3ldk50fjs', passRndmValToBidder : true});
 
-
 publife.init(1500, 'low');																//kick things off, define timeout and granularity
-
 /* END publife */
+
+var end = performance.now();
+console.log(end);
+console.log('total:', Math.round(end - start));
 </script>
 </head>
 <body>
@@ -284,8 +294,8 @@ publife.init(1500, 'low');																//kick things off, define timeout and 
 	</footer>
 	<script>
 	(function(p, len){
-		p = publife.slots, len = p.length;
-		for(var i = 0; i < len; i++) {
+		p = publife.slots;
+		for(var i = 0, len = p.length; i < len; i++) {
 			//googletag.display();
 			if(p[i].sizeMapping.length) {
 				googletag.cmd.push(
