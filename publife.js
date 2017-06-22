@@ -181,5 +181,5 @@ publife.init = function(timeout, granularity) {
 			}
 		})(this.adUnits, sendAdserverRequest)
 	);
-    setTimeout(sendAdserverRequest, (isNaN(timeout) ? 700 : timeout));						//default to 700 mins if not set
+    setTimeout(sendAdserverRequest, (isNaN(timeout) ? 700 : timeout));						//default to 700ms if not set
 };
